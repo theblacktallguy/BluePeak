@@ -9,6 +9,8 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  secret: process.env.AUTH_SECRET!,
+
   session: {
     strategy: "jwt",
     maxAge: 60 * 30,
@@ -66,8 +68,8 @@ export const {
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
+        token.id = String(user.id);
+        token.role = String(user.role ?? "USER");
       }
 
       return token;
@@ -75,8 +77,9 @@ export const {
 
     session({ session, token }) {
       if (session.user) {
-        session.user.id = String(token.id);
-        session.user.role = String(token.role);
+        session.user.id = typeof token.id === "string" ? token.id : "";
+        session.user.role =
+          typeof token.role === "string" ? token.role : "USER";
       }
 
       return session;
