@@ -29,9 +29,33 @@ function getAccountHref(account: BankAccount) {
 }
 
 export default function AccountCards({ accounts }: Props) {
+  const orderedAccounts = [...accounts].sort((a, b) => {
+    function getOrder(account: BankAccount) {
+      const name = account.accountName.toLowerCase();
+
+      if (account.accountType === "CHECKING") return 1;
+
+      if (name.includes("family")) return 2;
+
+      if (
+        account.accountType === "SAVINGS" &&
+        !name.includes("family")
+      )
+        return 3;
+
+      if (account.accountType === "INVESTMENT") return 4;
+
+      if (account.accountType === "CREDIT") return 5;
+
+      return 999;
+    }
+
+    return getOrder(a) - getOrder(b);
+  });
+
   return (
     <section className="mt-4 space-y-3">
-      {accounts.map((account) => (
+      {orderedAccounts.map((account) => (
         <Link
           href={getAccountHref(account)}
           key={account.id}
