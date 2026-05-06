@@ -171,13 +171,13 @@ export default function RegisterPage() {
 const inputClass =
   "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#15589b] focus:ring-4 focus:ring-[#15589b]/10";
 
-function FieldLabel({ label }: { label: string }) {
-  return (
-    <label className="-mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
-      {label}
-    </label>
-  );
-}
+  function FieldLabel({ label }: { label: string }) {
+    return (
+      <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+        {label}
+      </label>
+    );
+  }
 
 function MiniFeature({
   icon,
