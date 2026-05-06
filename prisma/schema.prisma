@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  CREDIT
+  INVESTMENT
+}
+
+enum InvestmentCategory {
+  TECHNOLOGY
+  FINANCE
+  HEALTHCARE
+  ENERGY
+  CONSUMER
+  INDUSTRIAL
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  TRANSFER
+  FEE
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  DECLINED
+}
+
+enum TransferStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  FAILED
+}
+
+model User {
+  id              String            @id @default(cuid())
+  fullName        String
+  email           String            @unique
+  passwordHash    String
+  role            Role              @default(USER)
+  isActive        Boolean           @default(true)
+  isFrozen        Boolean           @default(false)
+  accessCode      String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  bankAccounts    BankAccount[]
+  transactions    Transaction[]
+  transferRequests TransferRequest[]
+  investmentHoldings InvestmentHolding[]
+}
+
+model BankAccount {
+  id             String        @id @default(cuid())
+  userId         String
+  accountName    String
+  accountType    AccountType
+  accountNumber  String        @unique
+  balance        Decimal       @default(0.00) @db.Decimal(12, 2)
+  currency       String        @default("USD")
+  isPrimary      Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   Transaction[]
+}
+
+model Transaction {
+  id              String            @id @default(cuid())
+  userId          String
+  bankAccountId   String
+  type            TransactionType
+  status          TransactionStatus @default(SUCCESS)
+  title           String
+  description     String?
+  amount          Decimal           @db.Decimal(12, 2)
+  balanceAfter    Decimal?          @db.Decimal(12, 2)
+  reference       String            @unique
+  transactionDate DateTime          @default(now())
+  createdAt       DateTime          @default(now())
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bankAccount     BankAccount       @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+}
+
+model TransferRequest {
+  id                String          @id @default(cuid())
+  userId            String
+  fromAccountId     String
+  recipientName     String
+  recipientBank     String
+  recipientAccount  String
+  amount            Decimal         @db.Decimal(12, 2)
+  note              String?
+  accessCodeUsed    Boolean         @default(false)
+  status            TransferStatus  @default(PENDING)
+  adminNote         String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model InvestmentHolding {
+  id          String             @id @default(cuid())
+  userId      String
+  symbol      String
+  companyName String
+  category    InvestmentCategory
+  shares      Decimal            @db.Decimal(12, 4)
+  price       Decimal            @db.Decimal(12, 2)
+  value       Decimal            @db.Decimal(12, 2)
+  changePct   Decimal            @default(0.00) @db.Decimal(5, 2)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
