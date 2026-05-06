@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { BankAccount } from "@/app/generated/prisma/client";
+import type { BankAccount } from "@prisma/client";
 
 type Props = {
   accounts: BankAccount[];

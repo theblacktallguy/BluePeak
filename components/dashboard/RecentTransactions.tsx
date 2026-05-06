@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Transaction } from "@/app/generated/prisma/client";
+import type { Transaction } from "@prisma/client";
 
 type Props = {
   transactions: Transaction[];

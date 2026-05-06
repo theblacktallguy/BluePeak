@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { AccountType } from "@/app/generated/prisma/client";
+import { AccountType } from "@prisma/client";
+
 
 function generateAccountNumber() {
   return Math.floor(1000000000 + Math.random() * 9000000000).toString();

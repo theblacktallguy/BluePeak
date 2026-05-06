@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { TransferRequest } from "@/app/generated/prisma/client";
+import type { TransferRequest } from "@prisma/client";
 
 type Props = {
   transfers: TransferRequest[];

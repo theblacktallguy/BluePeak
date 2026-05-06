@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import {
   AccountType,
   type User,
-} from "@/app/generated/prisma/client";
+} from "@prisma/client";
 import {
   defaultAccounts,
   generateAccessCode,

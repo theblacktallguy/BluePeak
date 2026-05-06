@@ -2,7 +2,7 @@ import {
   TransactionStatus,
   TransactionType,
   type AccountType,
-} from "@/app/generated/prisma/client";
+} from "@prisma/client";
 
 const debitTitles = [
   "Grocery Store Purchase",

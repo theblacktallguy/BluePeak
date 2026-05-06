@@ -1,7 +1,7 @@
 import {
   AccountType,
   InvestmentCategory,
-} from "@/app/generated/prisma/client";
+} from "@prisma/client";
 
 export function generateAccountNumber() {
   return Math.floor(1000000000 + Math.random() * 9000000000).toString();

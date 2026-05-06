@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { generateInvestmentHoldings } from "@/lib/accountSetup";
+import type { BankAccount, InvestmentHolding } from "@prisma/client";
 
 type Props = {
   params: Promise<{ userId: string }>;
@@ -39,8 +40,8 @@ export default async function AdminInvestmentUserPage({ params }: Props) {
   }
 
   const investmentAccount = user.bankAccounts.find(
-    (account) => account.accountType === "INVESTMENT"
-  );
+    (account: BankAccount) => account.accountType === "INVESTMENT"
+   );
 
   if (!investmentAccount) {
     notFound();
@@ -49,10 +50,10 @@ export default async function AdminInvestmentUserPage({ params }: Props) {
   const safeUserId = user.id;
   const safeInvestmentAccountId = investmentAccount.id;
 
-  const portfolioTotal = user.investmentHoldings.reduce(
-    (sum, holding) => sum + Number(holding.value),
+    const portfolioTotal = user.investmentHoldings.reduce(
+    (sum: number, holding: InvestmentHolding) => sum + Number(holding.value),
     0
-  );
+    );
 
   async function updateInvestmentBalance(formData: FormData) {
     "use server";
@@ -163,7 +164,7 @@ export default async function AdminInvestmentUserPage({ params }: Props) {
           </h2>
 
           <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-            {user.investmentHoldings.map((holding, index) => (
+            {user.investmentHoldings.map((holding: InvestmentHolding, index: number) => (
               <div
                 key={holding.id}
                 className={`flex items-center justify-between gap-4 px-5 py-4 ${
