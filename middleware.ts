@@ -1,9 +1,15 @@
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
 
-export default auth((req) => {
-  const isLoggedIn = Boolean(req.auth?.user);
-  const role = req.auth?.user?.role;
+export async function middleware(req: NextRequest) {
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+  });
+
+  const isLoggedIn = Boolean(token);
+  const role = token?.role;
   const pathname = req.nextUrl.pathname;
 
   const isAdminRoute = pathname.startsWith("/admin");
@@ -22,17 +28,8 @@ export default auth((req) => {
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
-  matcher: [
-    /*
-      Protect all app pages except:
-      - api routes
-      - Next static files
-      - images/assets
-      - favicon
-    */
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
