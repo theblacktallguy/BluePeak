@@ -1,9 +1,6 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import {
-  AccountType,
-  type User,
-} from "@prisma/client";
+import { AccountType, type User } from "@prisma/client";
 import {
   defaultAccounts,
   generateAccessCode,
@@ -19,6 +16,16 @@ type CreateUserInput = {
   password: string;
 };
 
+function randomMemberSinceDate() {
+  const start = new Date(2023, 0, 1); // Jan 1, 2023
+  const end = new Date(2023, 2, 31); // Mar 31, 2023
+
+  const randomTime =
+    start.getTime() + Math.random() * (end.getTime() - start.getTime());
+
+  return new Date(randomTime);
+}
+
 export async function createUserWithDefaults({
   fullName,
   email,
@@ -27,6 +34,7 @@ export async function createUserWithDefaults({
   const passwordHash = await bcrypt.hash(password, 10);
   const accessCode = generateAccessCode();
   const investmentBalance = randomInvestmentBalance();
+  const memberSinceDate = randomMemberSinceDate();
 
   const user = await prisma.user.create({
     data: {
@@ -34,6 +42,7 @@ export async function createUserWithDefaults({
       email: email.toLowerCase().trim(),
       passwordHash,
       accessCode,
+      createdAt: memberSinceDate,
       bankAccounts: {
         create: [
           ...defaultAccounts.map((account) => ({
@@ -42,6 +51,7 @@ export async function createUserWithDefaults({
             accountNumber: generateAccountNumber(),
             balance: account.balance,
             isPrimary: account.isPrimary,
+            createdAt: memberSinceDate,
           })),
           {
             accountName: "Investment Account",
@@ -49,6 +59,7 @@ export async function createUserWithDefaults({
             accountNumber: generateAccountNumber(),
             balance: investmentBalance.toFixed(2),
             isPrimary: false,
+            createdAt: memberSinceDate,
           },
         ],
       },

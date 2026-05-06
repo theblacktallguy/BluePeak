@@ -68,11 +68,10 @@ export function generateMockTransactionsForAccount(params: {
    * account created: May 5, 2026
    * history starts: May 2025
    */
-  const startDate = new Date(params.accountCreatedAt);
-  startDate.setFullYear(startDate.getFullYear() - 1);
-  startDate.setDate(1);
+  const startDate = new Date(2023, 8, 1); // September 2023
+  const totalMonths = 25; // September 2023 through September 2025
 
-  for (let monthOffset = 0; monthOffset < 12; monthOffset++) {
+  for (let monthOffset = 0; monthOffset < totalMonths; monthOffset++) {
     const monthDate = new Date(startDate);
     monthDate.setMonth(startDate.getMonth() + monthOffset);
 
