@@ -22,7 +22,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white">
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-white pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto grid max-w-md grid-cols-5 px-2 py-2">
         {nav.map((item) => {
           const active = pathname === item.href;

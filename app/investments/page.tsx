@@ -55,7 +55,7 @@ export default async function InvestmentsPage() {
   const positive = averageChange >= 0;
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] pb-24">
+    <main className="min-h-dvh bg-[#f4f7fb] pb-20">
       <section className="bg-[#15589b] px-5 pb-8 pt-6 text-white">
         <div className="mx-auto max-w-3xl">
           <Link href="/dashboard" className="text-sm text-white/90">

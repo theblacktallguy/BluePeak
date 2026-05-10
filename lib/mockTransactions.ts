@@ -59,6 +59,10 @@ export function generateMockTransactionsForAccount(params: {
   bankAccountId: string;
   accountType: AccountType;
   accountCreatedAt: Date;
+  startYear?: number;
+  startMonth?: number;
+  endYear?: number;
+  endMonth?: number;
 }) {
   const transactions = [];
 
@@ -68,8 +72,19 @@ export function generateMockTransactionsForAccount(params: {
    * account created: May 5, 2026
    * history starts: May 2025
    */
-  const startDate = new Date(2023, 8, 1); // September 2023
-  const totalMonths = 25; // September 2023 through September 2025
+  const startYear = params.startYear ?? 2023;
+  const startMonth = params.startMonth ?? 8;
+
+  const endYear = params.endYear ?? 2025;
+  const endMonth = params.endMonth ?? 8;
+
+  const startDate = new Date(startYear, startMonth, 1);
+  const endDate = new Date(endYear, endMonth, 1);
+
+  const totalMonths =
+    (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+    (endDate.getMonth() - startDate.getMonth()) +
+    1;
 
   for (let monthOffset = 0; monthOffset < totalMonths; monthOffset++) {
     const monthDate = new Date(startDate);

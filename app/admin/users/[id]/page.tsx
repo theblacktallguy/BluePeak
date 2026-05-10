@@ -2,7 +2,11 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { toggleUserFreeze, createUserAccount } from "./actions";
+import {
+  toggleUserFreeze,
+  createUserAccount,
+  regenerateUserHistory,
+} from "./actions";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -106,52 +110,104 @@ export default async function AdminUserDetailPage({ params }: Props) {
         </form>
 
         <div className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-sm font-semibold text-slate-900">
-            Create account section
-        </h2>
+            <h2 className="text-sm font-semibold text-slate-900">
+                Create account section
+            </h2>
 
-        <p className="mt-1 text-xs text-slate-500">
-            Add a missing account type for this user. Balance edits do not create transaction history.
-        </p>
+            <p className="mt-1 text-xs text-slate-500">
+                Add a missing account type for this user. Balance edits do not create transaction history.
+            </p>
 
-        <form
-            action={async (formData) => {
-            "use server";
-            await createUserAccount(user.id, formData);
-            }}
-            className="mt-5 grid gap-3 md:grid-cols-4"
-        >
-            <input
-            name="accountName"
-            placeholder="Account name"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-            />
-
-            <select
-            name="accountType"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-            defaultValue="CHECKING"
+            <form
+                action={async (formData) => {
+                "use server";
+                await createUserAccount(user.id, formData);
+                }}
+                className="mt-5 grid gap-3 md:grid-cols-4"
             >
-            <option value="CHECKING">Checking</option>
-            <option value="SAVINGS">Savings</option>
-            <option value="CREDIT">Credit</option>
-            <option value="INVESTMENT">Investment</option>
+                <input
+                name="accountName"
+                placeholder="Account name"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                />
+
+                <select
+                name="accountType"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                defaultValue="CHECKING"
+                >
+                <option value="CHECKING">Checking</option>
+                <option value="SAVINGS">Savings</option>
+                <option value="CREDIT">Credit</option>
+                <option value="INVESTMENT">Investment</option>
+                </select>
+
+                <input
+                name="balance"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Balance"
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                />
+
+                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                Create Account
+                </button>
+            </form>
+        </div>
+
+        <div className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Regenerate transaction history
+          </h2>
+
+          <p className="mt-1 text-xs text-slate-500">
+            Choose the date range for this user’s generated account history. This will replace existing generated transactions.
+          </p>
+
+          <form
+            action={async (formData) => {
+              "use server";
+              await regenerateUserHistory(user.id, formData);
+            }}
+            className="mt-5 grid gap-3 md:grid-cols-5"
+          >
+            <select
+              name="startMonth"
+              defaultValue="8"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            >
+              <MonthOptions />
             </select>
 
             <input
-            name="balance"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="Balance"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+              name="startYear"
+              type="number"
+              defaultValue="2023"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            />
+
+            <select
+              name="endMonth"
+              defaultValue="8"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            >
+              <MonthOptions />
+            </select>
+
+            <input
+              name="endYear"
+              type="number"
+              defaultValue="2025"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
             />
 
             <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-            Create Account
+              Regenerate
             </button>
-        </form>
-    </div>
+          </form>
+        </div>
 
         <section className="mt-6">
           <h2 className="mb-3 text-sm font-semibold text-slate-700">
@@ -242,5 +298,24 @@ function StatCard({ label, value }: { label: string; value: string }) {
       <p className="text-sm text-slate-500">{label}</p>
       <p className="mt-2 text-lg font-bold text-slate-900">{value}</p>
     </div>
+  );
+}
+
+function MonthOptions() {
+  return (
+    <>
+      <option value="0">January</option>
+      <option value="1">February</option>
+      <option value="2">March</option>
+      <option value="3">April</option>
+      <option value="4">May</option>
+      <option value="5">June</option>
+      <option value="6">July</option>
+      <option value="7">August</option>
+      <option value="8">September</option>
+      <option value="9">October</option>
+      <option value="10">November</option>
+      <option value="11">December</option>
+    </>
   );
 }

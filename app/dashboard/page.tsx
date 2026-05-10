@@ -64,7 +64,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] pb-24">
+    <main className="min-h-dvh bg-[#f4f7fb] pb-20">
       <DashboardHeader
         bankName="BluePeak Trust"
         fullName={user.fullName}

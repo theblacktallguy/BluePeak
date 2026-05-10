@@ -152,7 +152,7 @@ export default function TransferFlow({ accounts, userAccessCode }: Props) {
 
   if (submitted) {
     return (
-      <main className="min-h-screen bg-[#f4f7fb] pb-24">
+      <main className="min-h-dvh bg-[#f4f7fb] pb-20">
         <section className="bg-[#15589b] px-5 pb-6 pt-6 text-white">
           <div className="mx-auto max-w-3xl">
             <Link href="/transfers" className="text-sm text-white/90">
@@ -195,7 +195,7 @@ export default function TransferFlow({ accounts, userAccessCode }: Props) {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] pb-24">
+    <main className="min-h-dvh bg-[#f4f7fb] pb-20">
       <section className="bg-[#15589b] px-5 pb-6 pt-6 text-white">
         <div className="mx-auto max-w-3xl">
           <Link href="/transfers" className="text-sm text-white/90">
